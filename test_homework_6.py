@@ -22,11 +22,10 @@ def test_dark_theme_by_time_and_user_choice():
     dark_theme_enabled_by_user = True
     # TODO переключите темную тему в зависимости от времени суток,
     #  но учтите что темная тема может быть включена вручную
+    is_dark_theme = None
 
-    if current_time.hour not in range(6, 22):
-        is_dark_theme: True
-    elif dark_theme_enabled_by_user:
-        return dark_theme_enabled_by_user
+    if dark_theme_enabled_by_user or current_time >= time(hour=22) or current_time < time(hour=6):
+        is_dark_theme = True
 
     assert is_dark_theme is True
 
@@ -45,19 +44,16 @@ def test_find_suitable_user():
 
     # TODO найдите пользователя с именем "Olga"
     for user in users:
-        if user['name'] == "Olga":
-            return user
-
-    suitable_users = user
+        if user['name'] == 'Olga':
+            suitable_users = user
 
     assert suitable_users == {"name": "Olga", "age": 45}
 
     # TODO найдите всех пользователей младше 20 лет
+    suitable_users = []
     for user in users:
-        if user['age'] < 20:
-            return user
-
-    suitable_users = user
+        if user["age"] < 20:
+            suitable_users.append(user)
 
     assert suitable_users == [
         {"name": "Stanislav", "age": 15},
@@ -75,10 +71,9 @@ def test_find_suitable_user():
 # "Open Browser [Chrome]"
 
 def readable_function(func, *args, **kwargs):
-    func_name = func.__name__.replace('_', ' ').title()
-    func_args = ', '.join([f"{value}" for value in kwargs.values()])
-    actual_result = f"{func_name} [{func_args}]"
-    return actual_result
+    f_name = func.__name__.replace('_', ' ').title()
+    f_arg = ", ".join([*args, *kwargs.values()])
+    return f"{f_name} [{f_arg}]"
 
 def test_readable_function():
     open_browser(browser_name="Chrome")
